@@ -16,7 +16,7 @@ module Forminate
         next unless validate_assoc?(name) && object.respond_to?(:invalid?) && object.invalid?
 
         object.errors.each do |field, messages|
-          errors["#{name}_#{field}".to_sym] = messages
+          errors.add("#{name}_#{field}".to_sym, messages)
         end
       end
     end
