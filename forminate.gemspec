@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'active_attr', '>= 0.8', '<= 0.10.1'
+  spec.add_dependency 'active_attr', '>= 0.8', '<= 0.13'
   spec.add_dependency 'activesupport', '>= 3.0.2', '< 5.2'
   spec.add_dependency 'client_side_validations', '~> 12.1'
 
