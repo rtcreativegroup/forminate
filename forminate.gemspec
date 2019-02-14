@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'active_attr', '>= 0.8', '<= 0.13'
   spec.add_dependency 'activesupport', '>= 3.0.2', '< 6'
-  spec.add_dependency 'client_side_validations', '~> 12.1'
 
   spec.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.1'
   spec.add_development_dependency 'rake', '~> 10.1'
