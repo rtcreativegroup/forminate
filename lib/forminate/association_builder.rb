@@ -30,12 +30,20 @@ module Forminate
     def primary_key
       return unless klass.respond_to?(:primary_key)
 
-      attrs["#{name}_#{klass.primary_key}".to_sym]
+      value_for_prefixed_key(name, klass.primary_key)
+    end
+
+    def value_for_prefixed_key(*args)
+      attrs[args.join('_').to_sym]
     end
 
     def association_attributes
-      relevant_attributes = attrs.select { |k, _| k =~ /^#{prefix}/ }
-      relevant_attributes.each_with_object({}) do |(name, definition), hash|
+      prefixed_attributes
+    end
+
+    def prefixed_attributes
+      prefixed_attributes = attrs.select { |k, _| k =~ /^#{prefix}/ }
+      prefixed_attributes.each_with_object({}) do |(name, definition), hash|
         new_key = name.to_s.sub(prefix, '').to_sym
         hash[new_key] = definition
       end
