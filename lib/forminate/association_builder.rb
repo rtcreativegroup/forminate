@@ -30,7 +30,8 @@ module Forminate
     def primary_key
       return unless klass.respond_to?(:primary_key)
 
-      value_for_prefixed_key(name, klass.primary_key)
+      value_for_nested_key(name, klass.primary_key) ||
+        value_for_prefixed_key(name, klass.primary_key)
     end
 
     def value_for_prefixed_key(*args)
@@ -42,7 +43,7 @@ module Forminate
     end
 
     def association_attributes
-      prefixed_attributes
+      (nested_attributes || {}).reverse_merge(prefixed_attributes)
     end
 
     def prefixed_attributes
