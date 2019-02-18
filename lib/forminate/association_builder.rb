@@ -48,6 +48,7 @@ module Forminate
 
     def prefixed_attributes
       prefixed_attributes = attrs.select { |k, _| k =~ /^#{prefix}/ }
+      attrs.delete_if { |k, _| prefixed_attributes.keys.include?(k) }
       prefixed_attributes.each_with_object({}) do |(name, definition), hash|
         new_key = name.to_s.sub(prefix, '').to_sym
         hash[new_key] = definition
@@ -55,7 +56,7 @@ module Forminate
     end
 
     def nested_attributes
-      attrs[name]
+      attrs.delete(name)
     end
   end
 end
