@@ -37,6 +37,10 @@ module Forminate
       attrs[args.join('_').to_sym]
     end
 
+    def value_for_nested_key(*args)
+      attrs.dig(*args.map(&:to_sym))
+    end
+
     def association_attributes
       prefixed_attributes
     end
@@ -47,6 +51,10 @@ module Forminate
         new_key = name.to_s.sub(prefix, '').to_sym
         hash[new_key] = definition
       end
+    end
+
+    def nested_attributes
+      attrs[name]
     end
   end
 end
