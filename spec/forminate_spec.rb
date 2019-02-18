@@ -145,15 +145,63 @@ describe Forminate do
       expect(new_model.dummy_user_last_name).to eq('Lawson')
     end
 
-    context 'primary key of an associated AR model is present' do
-      it 'populates the matching model with values from the database' do
-        user = DummyUser.create(
+    it 'sets association attributes based on an nested options hash' do
+      new_model = model_class.new(
+        dummy_user: {
           first_name: 'Mo',
           last_name: 'Lawson',
-          email: 'mo@example.com'
-        )
-        new_model = model_class.new(dummy_user_id: user.id)
-        expect(new_model.dummy_user_first_name).to eq('Mo')
+        },
+        dummy_book: {
+          title: 'The Hobbit',
+        }
+      )
+      expect(new_model.dummy_user_first_name).to eq('Mo')
+      expect(new_model.dummy_user_last_name).to eq('Lawson')
+      expect(new_model.dummy_book.title).to eq('The Hobbit')
+    end
+
+    it 'allows nested attributes to take priority over prefixed attributes' do
+      new_model = model_class.new(
+        dummy_user_first_name: 'Test',
+        dummy_user: {
+          first_name: 'Mo',
+          last_name: 'Lawson',
+        },
+        dummy_book: {
+          title: 'The Hobbit',
+        },
+        dummy_user_last_name: 'User',
+        dummy_book_price: 1.95
+      )
+      expect(new_model.dummy_user_first_name).to eq('Mo')
+      expect(new_model.dummy_user_last_name).to eq('Lawson')
+      expect(new_model.dummy_book.title).to eq('The Hobbit')
+      expect(new_model.dummy_book.price).to eq(1.95)
+    end
+
+    context 'primary key of an associated AR model is present' do
+      context 'prefixed attributes' do
+        it 'populates the matching model with values from the database' do
+          user = DummyUser.create(
+            first_name: 'Mo',
+            last_name: 'Lawson',
+            email: 'mo@example.com'
+          )
+          new_model = model_class.new(dummy_user_id: user.id)
+          expect(new_model.dummy_user.first_name).to eq('Mo')
+        end
+      end
+
+      context 'nested attributes' do
+        it 'populates the matching model with values from the database' do
+          user = DummyUser.create(
+            first_name: 'Mo',
+            last_name: 'Lawson',
+            email: 'mo@example.com'
+          )
+          new_model = model_class.new(dummy_user: { id: user.id })
+          expect(new_model.dummy_user_first_name).to eq('Mo')
+        end
       end
     end
 
