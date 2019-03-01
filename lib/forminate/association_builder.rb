@@ -15,6 +15,10 @@ module Forminate
       end
     end
 
+    def attribute_keys_for_cleanup
+      prefixed_attributes.keys.push(name)
+    end
+
     private
 
     attr_reader :name, :attrs
@@ -30,15 +34,35 @@ module Forminate
     def primary_key
       return unless klass.respond_to?(:primary_key)
 
-      attrs["#{name}_#{klass.primary_key}".to_sym]
+      value_for_nested_key(name, klass.primary_key) ||
+        value_for_prefixed_key(name, klass.primary_key)
+    end
+
+    def value_for_prefixed_key(*args)
+      attrs[args.join('_').to_sym]
+    end
+
+    def value_for_nested_key(*args)
+      attrs.dig(*args.map(&:to_sym))
     end
 
     def association_attributes
-      relevant_attributes = attrs.select { |k, _| k =~ /^#{prefix}/ }
-      relevant_attributes.each_with_object({}) do |(name, definition), hash|
+      (nested_attributes || {}).reverse_merge(unprefixed_attributes)
+    end
+
+    def prefixed_attributes
+      attrs.select { |k, _| k =~ /^#{prefix}/ }
+    end
+
+    def unprefixed_attributes
+      prefixed_attributes.each_with_object({}) do |(name, definition), hash|
         new_key = name.to_s.sub(prefix, '').to_sym
         hash[new_key] = definition
       end
+    end
+
+    def nested_attributes
+      attrs[name]
     end
   end
 end
