@@ -122,8 +122,9 @@ module Forminate
     association_names.each do |association_name|
       association_builder = AssociationBuilder.new(association_name, attributes)
       association = association_builder.build
+      keys_for_cleanup = association_builder.attribute_keys_for_cleanup.dup
       attributes.delete_if do |key, _|
-        association_builder.attribute_keys_for_cleanup.include?(key.to_sym)
+        keys_for_cleanup.include?(key.to_sym)
       end
       instance_variable_set("@#{association_name}".to_sym, association)
     end

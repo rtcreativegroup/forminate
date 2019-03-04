@@ -16,6 +16,8 @@ module Forminate
     end
 
     def attribute_keys_for_cleanup
+      return [] unless nested_attributes.present?
+
       prefixed_attributes.keys.push(name)
     end
 
@@ -62,7 +64,7 @@ module Forminate
     end
 
     def nested_attributes
-      attrs[name]
+      attrs[name] if attrs[name].is_a?(Hash)
     end
   end
 end
