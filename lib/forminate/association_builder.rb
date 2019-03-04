@@ -62,7 +62,7 @@ module Forminate
     end
 
     def nested_attributes
-      attrs[name]
+      attrs[name] if attrs[name].is_a?(Hash)
     end
   end
 end
