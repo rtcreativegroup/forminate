@@ -16,6 +16,8 @@ module Forminate
     end
 
     def attribute_keys_for_cleanup
+      return [] unless nested_attributes.present?
+
       prefixed_attributes.keys.push(name)
     end
 
